@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taxi Register</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Taxi Register</h1>
+
+    <form id="car-form">
+      <input type="hidden" id="car-id" />
+      <label>Márka:
+        <select id="brand" required>
+          <option value="">--Válassz--</option>
+          <option value="Toyota">Toyota</option>
+          <option value="Honda">Honda</option>
+          <option value="Ford">Ford</option>
+          <option value="Chevrolet">Chevrolet</option>
+          <option value="Nissan">Nissan</option>
+          <option value="BMW">BMW</option>
+          <option value="Mercedes-Benz">Mercedes-Benz</option>
+          <option value="Volkswagen">Volkswagen</option>
+          <option value="Audi">Audi</option>
+          <option value="Hyundai">Hyundai</option>
+          <option value="Kia">Kia</option>
+          <option value="Subaru">Subaru</option>
+          <option value="Lexus">Lexus</option>
+          <option value="Mazda">Mazda</option>
+          <option value="Tesla">Tesla</option>
+          <option value="Jeep">Jeep</option>
+          <option value="Porsche">Porsche</option>
+          <option value="Volvo">Volvo</option>
+          <option value="Jaguar">Jaguar</option>
+          <option value="Land Rover">Land Rover</option>
+          <option value="Mitsubishi">Mitsubishi</option>
+          <option value="Ferrari">Ferrari</option>
+          <option value="Lamborghini">Lamborghini</option>
+        </select>
+      </label>
+
+      <label>Modell:
+        <input type="text" id="model" required />
+      </label>
+
+      <label>Fogyasztás (L/100km):
+        <input type="number" id="fuelUse" step="0.1" min="0" required />
+      </label>
+
+      <label>Tulajdonos:
+        <input type="text" id="owner" required />
+      </label>
+
+      <label>Üzembe helyezés dátuma:
+        <input type="date" id="dayOfCommission" required />
+      </label>
+
+      <label>Elektromos:
+        <input type="checkbox" id="electric" />
+      </label>
+
+      <button type="submit">Mentés</button>
+    </form>
+
+    <h2>Autók listája</h2>
+    <table id="car-table">
+      <thead>
+        <tr>
+          <th>Márka</th>
+          <th>Modell</th>
+          <th>Fogyasztás</th>
+          <th>Tulajdonos</th>
+          <th>Dátum</th>
+          <th>Elektromos</th>
+          <th>Műveletek</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
