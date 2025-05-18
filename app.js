@@ -1,13 +1,21 @@
 const API_URL = 'https://iit-playground.arondev.hu/api';
-const neptun = 'TEST01';
+let NEPTUN = '';
 
 const form = document.getElementById('car-form');
 const tableBody = document.querySelector('#car-table tbody');
 
+function promptNeptunCode() {
+  NEPTUN = prompt('Kérlek, add meg a Neptun kódod (max 10 karakter):', '').toUpperCase().trim();
+  if (!NEPTUN || NEPTUN.length > 10) {
+    alert('Érvénytelen Neptun kód. Maximum 10 karakter engedélyezett.');
+    promptNeptunCode();
+  }
+}
+
 async function fetchCars() {
   try {
-    const res = await fetch(`${API_URL}/${neptun}/car`);
-    if (!res.ok) throw new Error('Autók betöltése sikertelen.');
+    const res = await fetch(`${API_URL}/${NEPTUN}/car`);
+    if (!res.ok) throw new Error('Autók lekérése sikertelen');
     const cars = await res.json();
     tableBody.innerHTML = '';
     cars.forEach(car => addCarToTable(car));
@@ -42,7 +50,11 @@ form.onsubmit = async (e) => {
   const dayOfCommission = document.getElementById('dayOfCommission').value;
   const electric = document.getElementById('electric').checked;
 
-  const allowedBrands = ["Toyota","Honda","Ford","Chevrolet","Nissan","BMW","Mercedes-Benz","Volkswagen","Audi","Hyundai","Kia","Subaru","Lexus","Mazda","Tesla","Jeep","Porsche","Volvo","Jaguar","Land Rover","Mitsubishi","Ferrari","Lamborghini"];
+  const allowedBrands = ["Toyota", "Honda", "Ford", "Chevrolet", "Nissan", "BMW",
+    "Mercedes-Benz", "Volkswagen", "Audi", "Hyundai", "Kia", "Subaru", "Lexus",
+    "Mazda", "Tesla", "Jeep", "Porsche", "Volvo", "Jaguar", "Land Rover",
+    "Mitsubishi", "Ferrari", "Lamborghini"];
+
   if (!allowedBrands.includes(brand)) {
     alert('Nem megfelelő márkát választottál.');
     return;
@@ -68,44 +80,37 @@ form.onsubmit = async (e) => {
     electric
   };
 
-  const method = car.id ? 'PUT' : 'POST';
-  const url = `${API_URL}/${neptun}/car`;
-
   try {
-    const response = await fetch(url, {
+    const method = car.id ? 'PUT' : 'POST';
+    const url = `${API_URL}/${NEPTUN}/car`;
+    const res = await fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(car)
     });
-
-    if (!response.ok) {
-      const result = await response.json();
-      throw new Error(result.message || 'Ismeretlen hiba történt.');
-    }
+    if (!res.ok) throw await res.json();
 
     alert(car.id ? 'Autó módosítva.' : 'Autó létrehozva.');
     form.reset();
     fetchCars();
   } catch (error) {
-    alert('Hiba történt a mentés közben: ' + error.message);
+    alert('Hiba történt a mentés közben: ' + (error.message || 'Ismeretlen hiba'));
   }
 };
 
-async function deleteCar(id) {
+window.deleteCar = async function(id) {
   if (!confirm('Biztosan törlöd ezt az autót?')) return;
   try {
-    const response = await fetch(`${API_URL}/${neptun}/car/${id}`, {
-      method: 'DELETE'
-    });
-    if (!response.ok) throw new Error('Törlés sikertelen.');
+    const res = await fetch(`${API_URL}/${NEPTUN}/car/${id}`, { method: 'DELETE' });
+    if (!res.ok) throw new Error('Törlés sikertelen');
     alert('Autó törölve.');
     fetchCars();
   } catch (error) {
     alert('Hiba történt a törlés során: ' + error.message);
   }
-}
+};
 
-function editCar(car) {
+window.editCar = function(car) {
   document.getElementById('car-id').value = car.id;
   document.getElementById('brand').value = car.brand;
   document.getElementById('model').value = car.model;
@@ -113,6 +118,8 @@ function editCar(car) {
   document.getElementById('owner').value = car.owner;
   document.getElementById('dayOfCommission').value = car.dayOfCommission;
   document.getElementById('electric').checked = car.electric;
-}
+};
 
+promptNeptunCode();
 fetchCars();
+
